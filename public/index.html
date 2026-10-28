@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Backbench Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fcfbf9;--ink:#111;--mute:#6b6b6b;--line:#dcdad5;--card:#fff;--hover:#f3f2ef;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme="light"]){}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--ink:#f3f1ed;--mute:#9a9a9a;--line:#2e2e2e;--card:#0b0b0b;--hover:#161616;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#000;--ink:#f3f1ed;--mute:#9a9a9a;--line:#2e2e2e;--card:#0b0b0b;--hover:#161616;color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100%}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;max-width:760px;width:100%;margin:0 auto}
+.wm{font:700 18px 'Playfair Display',serif}
+.dots{display:flex;gap:6px}.dots i{width:22px;height:3px;border-radius:2px;background:var(--line);transition:.3s}.dots i.on{background:var(--ink)}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 24px 40px}
+.step{display:none;width:100%;max-width:640px;animation:in .35s ease both}.step.show{display:block}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 14px}
+h1,h2{font-family:'Playfair Display',Georgia,serif;font-weight:500;line-height:1.1;margin:0 0 12px;letter-spacing:-.01em}
+h1{font-size:clamp(40px,8vw,68px)}h2{font-size:clamp(28px,5vw,40px)}
+.lead{color:var(--mute);margin:0 0 30px;font-size:17px}
+.tag{font:italic 500 15px 'Playfair Display',serif;color:var(--mute);margin:0 0 34px}
+.blocks{display:grid;gap:10px}
+.block{display:flex;justify-content:space-between;align-items:center;text-align:left;width:100%;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:18px 20px;font:500 17px Inter,sans-serif;cursor:pointer;transition:.18s}
+.block:hover{background:var(--hover);border-color:var(--ink);transform:translateY(-1px)}.block span{color:var(--mute);transition:.18s}.block:hover span{transform:translateX(4px);color:var(--ink)}
+.block.sel{border-color:var(--ink);background:var(--hover)}
+.chosen{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:5px 14px;font-size:13px;color:var(--mute);margin-bottom:18px}
+textarea{width:100%;font:inherit;font-size:17px;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);resize:vertical;min-height:220px}
+textarea:focus{outline:none;border-color:var(--ink)}
+.meta{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);margin:8px 2px 22px;min-height:20px}.err{color:var(--ink);font-weight:500}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);border:1px solid var(--ink);padding:14px 28px;border-radius:999px;font:500 15px Inter,sans-serif;cursor:pointer;text-decoration:none;transition:.18s}
+.btn:hover{opacity:.85}.btn:disabled{opacity:.35;cursor:not-allowed}
+.ghost{background:transparent;color:var(--ink)}.ghost:hover{background:var(--hover);opacity:1}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.back{background:none;border:0;color:var(--mute);font:500 14px Inter;cursor:pointer;padding:0;margin-bottom:22px}.back:hover{color:var(--ink)}
+.follow{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:22px;margin:6px 0 22px}
+.follow p{margin:0 0 14px;color:var(--mute);font-size:15px}.follow .tick{margin:14px 0 0;font-size:14px;color:var(--mute);min-height:22px}
+.fine{font-size:12.5px;color:var(--mute);margin-top:26px;max-width:56ch}.fine a{color:var(--ink)}
+.big{font-size:44px;margin-bottom:6px}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="top"><span class="wm">The Backbench Club</span><div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i></div></div>
+<main>
+
+<section class="step show" data-step="0">
+  <p class="eyebrow">Anonymous · Hosted by Manan</p>
+  <h1>Batao, Kya Hua?</h1>
+  <p class="tag">For everything we never said in class.</p>
+  <p class="lead" style="margin-bottom:18px;color:var(--ink);font-weight:500;font-size:16px">What’s on your mind?</p>
+  <div class="blocks" id="blocks">
+    <button class="block" data-v="Relationships, crushes and breakups">Relationships, crushes and breakups <span>→</span></button>
+    <button class="block" data-v="Friendships and social life">Friendships and social life <span>→</span></button>
+    <button class="block" data-v="Studies and personal struggles">Studies and personal struggles <span>→</span></button>
+    <button class="block" data-v="Family pressure and expectations">Family pressure and expectations <span>→</span></button>
+    <button class="block" data-v="Something else">Something else <span>→</span></button>
+  </div>
+</section>
+
+<section class="step" data-step="1">
+  <button class="back" data-back>← Back</button><br>
+  <span class="chosen" id="chosen"></span>
+  <h2>Tell us what happened.</h2>
+  <p class="lead">Share only what you’re comfortable sharing. Don’t include names, phone numbers, college IDs, or other identifying details.</p>
+  <textarea id="story" maxlength="3000" placeholder="Start anywhere. Write it like you’d tell a stranger on the last bench."></textarea>
+  <div class="meta"><span class="err" id="err" role="alert"></span><span id="count">0 / 3000</span></div>
+  <button class="btn" id="n1">Continue</button>
+</section>
+
+<section class="step" data-step="2">
+  <button class="back" data-back>← Back</button>
+  <h2>One last thing about you.</h2>
+  <p class="lead">So we know who this story speaks to. No names, ever.</p>
+  <div class="blocks" id="who">
+    <button class="block" data-v="JEE aspirant">JEE aspirant <span>→</span></button>
+    <button class="block" data-v="NEET aspirant">NEET aspirant <span>→</span></button>
+    <button class="block" data-v="College student">College student <span>→</span></button>
+    <button class="block" data-v="School student">School-going student <span>→</span></button>
+    <button class="block" data-v="Board exams">Preparing for board exams <span>→</span></button>
+    <button class="block" data-v="Other competitive exam">Other competitive exam <span>→</span></button>
+  </div>
+</section>
+
+<section class="step" data-step="3">
+  <button class="back" data-back>← Back</button>
+  <h2>Submit your story.</h2>
+  <p class="lead">Follow us on Instagram to unlock submission. That’s where selected stories become advice and reels.</p>
+  <div class="follow">
+    <p>Step 1: follow The Backbench Club.</p>
+    <a class="btn ghost" id="ig" href="https://instagram.com/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+    <div class="tick" id="tick"></div>
+  </div>
+  <button class="btn" id="send" disabled>Submit anonymously</button>
+  <p class="fine">By submitting, you agree your story may be rewritten without identifying details and used in advice posts or reels. If you’re in distress, please talk to someone now: Tele-MANAS (India, 24×7) <a href="tel:14416">14416</a>.</p>
+</section>
+
+<section class="step" data-step="4">
+  <div class="big">✓</div>
+  <h2>It’s heard.</h2>
+  <p class="lead">Your story was sent anonymously. If it’s selected, we’ll reshape it so nobody can trace it back to you. Keep an eye on our Instagram.</p>
+  <button class="btn ghost" id="again">Share another story</button>
+</section>
+
+</main>
+<script>
+const INSTAGRAM_URL = "https://instagram.com/"; // replace with the real profile link
+const $ = s => document.querySelector(s), steps = [...document.querySelectorAll(".step")], dots = [...document.querySelectorAll("#dots i")];
+const data = { topic: "", story: "", who: "" };
+document.getElementById("ig").href = INSTAGRAM_URL;
+
+function go(n) {
+  steps.forEach((s, i) => s.classList.toggle("show", i === n));
+  dots.forEach((d, i) => d.classList.toggle("on", i <= Math.min(n, 3)));
+  $("#dots").style.visibility = n === 4 ? "hidden" : "visible";
+  window.scrollTo({ top: 0 });
+  if (n === 1) setTimeout(() => $("#story").focus({ preventScroll: true }), 350);
+}
+document.querySelectorAll("[data-back]").forEach(b => b.onclick = () => go(steps.findIndex(s => s.classList.contains("show")) - 1));
+
+$("#blocks").onclick = e => {
+  const b = e.target.closest(".block"); if (!b) return;
+  data.topic = b.dataset.v; $("#chosen").textContent = data.topic; go(1);
+};
+$("#story").oninput = e => { $("#count").textContent = e.target.value.length + " / 3000"; $("#err").textContent = ""; };
+$("#n1").onclick = () => {
+  data.story = $("#story").value.trim();
+  if (data.story.length < 30) return ($("#err").textContent = "Write a little more (at least 30 characters).");
+  go(2);
+};
+$("#who").onclick = e => {
+  const b = e.target.closest(".block"); if (!b) return;
+  data.who = b.dataset.v; go(3);
+};
+
+let followed = false;
+$("#ig").addEventListener("click", () => {
+  if (followed) return; followed = true;
+  let t = 5; $("#tick").textContent = "Checking… " + t + "s";
+  const iv = setInterval(() => {
+    t--;
+    if (t > 0) return ($("#tick").textContent = "Checking… " + t + "s");
+    clearInterval(iv); $("#tick").textContent = "Thanks for following. You can submit now.";
+    $("#send").disabled = false;
+  }, 1000);
+});
+
+$("#send").onclick = async () => {
+  $("#send").disabled = true; $("#send").textContent = "Sending…";
+  try {
+    const res = await fetch("/api/stories", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic: data.topic, story: data.story, who: data.who, followed: true }),
+    });
+    if (!res.ok) throw new Error("save failed");
+    go(4);
+  } catch {
+    $("#send").disabled = false;
+    $("#send").textContent = "Submit anonymously";
+    $("#tick").textContent = "Couldn’t save your story. Please try again.";
+  }
+};
+$("#again").onclick = () => {
+  data.topic = data.story = data.who = ""; $("#story").value = ""; $("#count").textContent = "0 / 3000";
+  followed = false; $("#tick").textContent = ""; $("#send").textContent = "Submit anonymously"; $("#send").disabled = true;
+  go(0);
+};
+</script>
+</body>
+</html>
