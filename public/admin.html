@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Stories · The Backbench Club</title>
+<title>Stories · The Backbench</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#fcfbf9;--ink:#111;--mute:#6b6b6b;--line:#dcdad5;--card:#fff;--hover:#f3f2ef;color-scheme:light}
@@ -26,7 +26,8 @@ input:focus{outline:none;border-color:var(--ink)}
 .ghost{background:transparent;color:var(--ink)}
 .err{min-height:22px;margin:10px 0 0;font-size:14px;font-weight:500}
 .list{display:grid;gap:12px}
-.card{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:18px 20px}
+.card{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:18px 20px;cursor:pointer}
+.card:hover{border-color:var(--ink)}
 .card header{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
 .when{font-size:13px;color:var(--mute)}
 .topic{font:600 16px Inter,sans-serif;margin:8px 0 4px}
@@ -40,7 +41,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-of
 </head>
 <body>
 <div class="top">
-  <span class="wm">The Backbench Club</span>
+  <span class="wm">The Backbench</span>
   <div class="tabs" id="tabs" hidden>
     <button type="button" data-filter="all" class="on">All</button>
     <button type="button" data-filter="unread">Unread</button>
@@ -88,6 +89,7 @@ function render() {
   for (const item of rows) {
     const card = document.createElement("article");
     card.className = "card";
+    card.onclick = () => { location.href = "/admin/story/" + item.id; };
     const head = document.createElement("header");
     const topic = document.createElement("div");
     topic.className = "topic";
@@ -111,7 +113,10 @@ function render() {
     button.className = "btn ghost";
     button.type = "button";
     button.textContent = item.read ? "Mark unread" : "Mark read";
-    button.onclick = () => setRead(item, !item.read, button);
+    button.onclick = (event) => {
+      event.stopPropagation();
+      setRead(item, !item.read, button);
+    };
     foot.append(flag, button);
     card.append(head, who, body, foot);
     $("#list").append(card);

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Story · The Backbench</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fcfbf9;--ink:#111;--mute:#6b6b6b;--line:#dcdad5;--card:#fff;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#000;--ink:#f3f1ed;--mute:#9a9a9a;--line:#2e2e2e;--card:#0b0b0b;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100%}
+.top{padding:18px 24px;max-width:720px;margin:0 auto}
+.wm{font:700 18px 'Playfair Display',serif}
+main{max-width:720px;margin:0 auto;padding:8px 24px 64px}
+.back{background:none;border:0;color:var(--mute);font:500 14px Inter,sans-serif;cursor:pointer;padding:0;margin:0 0 22px}
+.back:hover{color:var(--ink)}
+h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:clamp(32px,5vw,48px);line-height:1.1;margin:8px 0 18px;letter-spacing:-.01em}
+.who{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--mute);margin-bottom:22px}
+.story{margin:0;white-space:pre-wrap;font-size:18px;line-height:1.7}
+.gate{max-width:420px}
+input{width:100%;font:inherit;font-size:16px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink)}
+input:focus{outline:none;border-color:var(--ink)}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);border:1px solid var(--ink);padding:12px 22px;border-radius:999px;font:500 14px Inter,sans-serif;cursor:pointer}
+.lead{color:var(--mute);margin:0 0 22px}
+.err{min-height:22px;margin:10px 0 0;font-size:14px;font-weight:500}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="top"><span class="wm">The Backbench</span></div>
+<main>
+  <section id="gate" class="gate" hidden>
+    <h1>Story</h1>
+    <p class="lead">Enter the password to open this page.</p>
+    <form id="login">
+      <input id="password" type="password" autocomplete="current-password" placeholder="Password" required>
+      <p class="err" id="err" role="alert"></p>
+      <button class="btn" type="submit">Open</button>
+    </form>
+  </section>
+  <article id="piece" hidden>
+    <button class="back" type="button" id="back">← All stories</button>
+    <h1 id="topic"></h1>
+    <div class="who" id="who"></div>
+    <p class="story" id="story"></p>
+  </article>
+</main>
+<script>
+const $ = (s) => document.querySelector(s);
+const id = location.pathname.split("/").filter(Boolean).pop();
+
+async function load() {
+  const res = await fetch("/api/admin/stories/" + id);
+  if (res.status === 401) {
+    $("#gate").hidden = false;
+    return;
+  }
+  if (!res.ok) {
+    $("#topic").textContent = "Story not found.";
+    $("#piece").hidden = false;
+    return;
+  }
+  const { story } = await res.json();
+  $("#topic").textContent = story.topic;
+  $("#who").textContent = story.who;
+  $("#story").textContent = story.story;
+  $("#gate").hidden = true;
+  $("#piece").hidden = false;
+}
+
+$("#back").onclick = () => { location.href = "/admin"; };
+$("#login").onsubmit = async (event) => {
+  event.preventDefault();
+  $("#err").textContent = "";
+  const res = await fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: $("#password").value }),
+  });
+  if (!res.ok) {
+    $("#err").textContent = "Wrong password.";
+    return;
+  }
+  await load();
+};
+
+load();
+</script>
+</body>
+</html>
